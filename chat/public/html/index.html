@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室——1</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+    <div class="chat">
+        <h2>Welcome   当前人数<span></span></h2>
+        <ul>
+
+        </ul>
+    </div>
+    <form action="">
+        <input type="text" class="mes">
+        <input type="button" value="发送" class="btn">
+    </form>
+    <script src="../js/index.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io('http://10.80.13.132:3000');
+        var mes=document.querySelector(".mes")
+        var btn=document.querySelector(".btn")
+        var ul=document.querySelector('ul')
+        var chat=document.querySelector(".chat")
+        btn.onclick=function (ev) {
+            ev.preventDefault();
+            var message=mes.value
+            socket.emit('message', { Info: message });
+            chat.scrollTop=chat.scrollHeight+16
+            console.log(chat.scrollTop)
+        }
+        socket.on('ret', function (data) {
+            ul.innerHTML=''
+            for(var i=0;i<data.hello.length;i++){
+                var li=document.createElement("li")
+                li.innerHTML=data.hello[i].Info
+                ul.appendChild(li)
+                document.querySelector('span').innerHTML=data.num
+            }
+            console.log(data);
+        });
+    </script>
+</body>
+</html>
